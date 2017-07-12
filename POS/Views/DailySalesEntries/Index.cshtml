@@ -1,0 +1,103 @@
+@model IEnumerable<POS.Models.DailySalesEntry>
+@inject UserManager<ApplicationUser> UserManager
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+
+
+<div class="row">
+    @{if (true)
+        {
+            await Html.RenderPartialAsync("Create", new POS.Models.DailySalesEntry());
+        }
+    }
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Cantidad
+            </th>
+            <th>
+                Nombre de Producto
+            </th>
+            <th>
+                Forma de Pago
+            </th>
+            <th>
+                Vlr Unitario
+            </th>
+            <th>
+                Vlr Total
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InventoryItem.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentMethod.Type)
+                </td>
+                <td>
+                    @item.ItemPriceCOP.ToString("C")
+                </td>
+                <td>
+                   @item.AmountCOP.ToString("C")
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@{if (true)
+    {
+       <!-- Summary of Sales according to Currency -->
+        <div style="margin-top: 50px">
+            <h3>Resumen de la Venta</h3>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Total Ventas
+                    </th>
+                    <th>
+                        Ventas USD
+                    </th>
+                    <th>
+                        Ventas TC
+                    </th>
+                    <th>
+                        Saldo Efectivo COP
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        @ViewData["TotalCOPSales"]
+                    </td>
+                    <td>
+                        @ViewData["TotalUSDSales"]
+                    </td>
+                    <td>
+                        @ViewData["TotalTCSales"]
+                    </td>
+                    <td>
+                        @ViewData["CashBalanceCOP"]
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    }
+}

@@ -1,0 +1,42 @@
+@model IEnumerable<POS.Models.DailySalesModel>
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Resumen de Ventas Diarios</h2>
+
+<p>
+    <a asp-action="Create">Crear registro nuevo</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Registros
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int counter = 1;
+            foreach (var item in Model)
+            {
+                <tr style="padding-top: 20px">
+                    <td>
+                        <a href="/DailySalesEntries/Index/@item.ID">
+                            Registro @counter: Ventas de  @item.Date.ToString("MMMM", new CultureInfo("es-ES")) @item.Date.Day, @item.Date.Year  - Vendedor(a): @item.SalesRep
+                        </a>
+                    </td>
+
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                    </td>
+                </tr>
+                counter++;
+            }
+        }
+    </tbody>
+</table>

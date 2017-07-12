@@ -1,0 +1,67 @@
+@model IEnumerable<POS.Models.InventoryItem>
+
+@{if (User.IsInRole("Admin"))
+    { 
+
+        <p style="float:left; margin-right: 40px">
+            <a asp-action="Create">Crear Nuevo Producto</a>
+        </p>
+        <p>
+            <a href="AddInventory/Index">Ingreso de Inventario</a>
+        </p>
+
+        <table class="table">
+            <thead>
+                <tr>
+                        <th>
+                            Nombre de Producto
+                        </th>
+                        <th>
+                            Referencia
+                        </th>
+                        <th>
+                            Precio de Compra
+                        </th>
+                        <th>
+                            Precio de Venta COP
+                        </th>
+                        <th>
+                            Precio de Venta USD
+                        </th>
+                        <th>
+                            Cantidad en Inventario
+                        </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model) {
+                        <tr>
+                            <td>
+                                @item.Name
+                            </td>
+                            <td>
+                                @item.Ref
+                            </td>
+                            <td>
+                                @item.Cost.ToString("C")
+                            </td>
+                            <td>
+                                @item.PriceCOP.ToString("C")
+                            </td>
+                            <td>
+                                @item.PriceUSD.ToString("C")
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.StockQty)
+                            </td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                            </td>
+                        </tr>
+                }
+            </tbody>
+        </table>
+        }
+}

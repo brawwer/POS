@@ -1,0 +1,36 @@
+@model POS.Models.DailySalesModel
+
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <h4>Ventas del Dia</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Date" class="col-md-2 control-label">Fecha</label>
+            <div class="col-md-10">
+                <input class="form-control" id="date" name="date" placeholder="DD/MM/YYY" type="text" required />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="SalesRep" class="col-md-2 control-label">Vendedor(a)</label>
+            <div class="col-md-10">
+                <select asp-for="SalesRep" asp-items="ViewBag.SalesRepId" class="form-control" required></select>
+                <span asp-validation-for="SalesRep" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Volver</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
