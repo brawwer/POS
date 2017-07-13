@@ -24,5 +24,7 @@ namespace POS.Models
 
         public DbSet<POS.Models.AddInventoryModel> AddInventoryModel { get; set; }
 
+        public DbSet<POS.Models.AddedItem> AddedItem { get; set; }
+
     }
 }

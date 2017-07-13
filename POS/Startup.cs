@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using POS.Data;
 using POS.Models;
 using POS.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace POS
 {
@@ -43,6 +44,7 @@ namespace POS
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();

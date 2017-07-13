@@ -3,24 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using POS.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
 
 namespace POS.Controllers
 {
     public class AddInventoryController : Controller
     {
         private readonly POSDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AddInventoryController(POSDbContext context, UserManager<ApplicationUser> userManager)
+        public AddInventoryController(POSDbContext context)
         {
             _context = context;
-            _userManager = userManager;
         }
 
         // GET: AddInventory
@@ -44,7 +39,25 @@ namespace POS.Controllers
                 return NotFound();
             }
 
-            return View(addInventoryModel);
+            ViewData["AddInventoryID"] = addInventoryModel.ID;
+            ViewData["AddInventoryDate"] = addInventoryModel.Date;
+            ViewData["AddInventoryUser"] = addInventoryModel.UserName;
+
+            List<AddInventoryDetailViewModel> addInventoryDetailViewModels = new List<AddInventoryDetailViewModel>();
+            var addedItems = _context.AddedItem
+                .Where(x => x.AddInventoryModelId == id);
+            var inventoryItems = _context.InventoryItem;
+
+            foreach (var record in addedItems)
+            {
+                var addInventoryDetailViewModel = new AddInventoryDetailViewModel();
+                addInventoryDetailViewModel.ID = record.ID;
+                addInventoryDetailViewModel.ItemName = inventoryItems.Find(record.InventoryItemId).Name;
+                addInventoryDetailViewModel.Quantity = record.Quantity;
+                addInventoryDetailViewModels.Add(addInventoryDetailViewModel);
+            }
+
+            return View(addInventoryDetailViewModels);
         }
 
         // GET: AddInventory/Create
@@ -77,8 +90,8 @@ namespace POS.Controllers
             {
                 //Save new AddInventoryModel
                 AddInventoryModel addInventoryModel = new AddInventoryModel();
+                addInventoryModel.UserName = User.Identity.Name;
                 addInventoryModel.Date = DateTime.Now;
-                addInventoryModel.UserId = _userManager.get
                 _context.Add(addInventoryModel);
                 await _context.SaveChangesAsync();
 

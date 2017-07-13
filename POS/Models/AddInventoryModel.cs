@@ -12,7 +12,7 @@ namespace POS.Models
             AddedItems = new HashSet<AddedItem>();
         }
         public int ID { get; set; }
-        public string UserId { get; set; }
+        public string UserName { get; set; }
         public DateTime Date { get; set; } = DateTime.Today;
         public ICollection<AddedItem> AddedItems { get; set; }
 
@@ -33,6 +33,13 @@ namespace POS.Models
     {
         public int ID { get; set; }
         public string Name { get; set; }
+        public int Quantity { get; set; }
+    }
+
+    public class AddInventoryDetailViewModel
+    {
+        public int ID { get; set; }
+        public string ItemName { get; set; }
         public int Quantity { get; set; }
     }
 }

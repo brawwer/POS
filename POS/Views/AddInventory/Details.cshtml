@@ -1,31 +1,58 @@
-@model POS.Models.AddInventoryModel
+@model IEnumerable<POS.Models.AddInventoryDetailViewModel>
 
-@{
-    ViewData["Title"] = "Details";
-    Layout = "~/Views/InventoryItems/Create.cshtml";
-}
-
-<h2>Details</h2>
 
 <div>
-    <h4>AddInventoryModel</h4>
+    <h4>Inventario Agregado</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Date)
+            ID del Registro
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Date)
+            @ViewData["AddInventoryID"]
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Quantity)
+            Fecha de Registro
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Quantity)
+            @ViewData["AddInventoryDate"]
+        </dd>
+        <dt>
+            Usuario
+        </dt>
+        <dd>
+            @ViewData["AddInventoryUser"]
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Nombre de Producto
+                </th>
+                <th>
+                    Cantidad Ingresada
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ItemName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+ <!--   <a asp-action="Edit" asp-route-id="Model.ID">Edit</a> |  -->
     <a asp-action="Index">Back to List</a>
 </div>
