@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +17,7 @@ namespace POS.Controllers
         }
 
         // GET: DailySalesEntries
-        public async Task<IActionResult> Index(int? id)
+        public async Task<IActionResult> Index(int? id, bool? error)
         {
             var inventoryControlDBContext = _context.DailySalesEntry
                 .Where(s => s.DailySalesId == id);
@@ -101,19 +99,28 @@ namespace POS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,InventoryItemId,DailySalesId,PaymentMethodId,Quantity")] DailySalesEntry dailySalesEntry)
         {
-
-            var itemDetails = _context.InventoryItem
+            if (ModelState.IsValid)
+            {
+                var itemDetails = _context.InventoryItem
                 .Where(x => x.ID == dailySalesEntry.InventoryItemId)
                 .First();
 
-            dailySalesEntry.ItemPriceCOP = itemDetails.PriceCOP;
-            dailySalesEntry.AmountCOP = dailySalesEntry.Quantity * itemDetails.PriceCOP;
+                var currentStockQty = itemDetails.StockQty;
 
-            dailySalesEntry.ItemPriceUSD = itemDetails.PriceUSD;
-            dailySalesEntry.AmountUSD = dailySalesEntry.Quantity * itemDetails.PriceUSD;
+                if(dailySalesEntry.Quantity > currentStockQty)
+                {
+                    //Add error message and add to span element
+                    return RedirectToAction("Index", new {id = dailySalesEntry.DailySalesId});
+                }
 
-            if (ModelState.IsValid)
-            {
+                itemDetails.StockQty -= dailySalesEntry.Quantity; 
+
+                dailySalesEntry.ItemPriceCOP = itemDetails.PriceCOP;
+                dailySalesEntry.AmountCOP = dailySalesEntry.Quantity * itemDetails.PriceCOP;
+
+                dailySalesEntry.ItemPriceUSD = itemDetails.PriceUSD;
+                dailySalesEntry.AmountUSD = dailySalesEntry.Quantity * itemDetails.PriceUSD;
+
                 _context.Add(dailySalesEntry);
                 await _context.SaveChangesAsync();
             }
